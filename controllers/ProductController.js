@@ -98,7 +98,11 @@ const UpdateProduct = async (req, res) => {
         console.log("Update Product Image Path Get", product.imagePath);
 
         if (req.file && product.imagePath) {
-            const imagePath = fs.unlinkSync(`imageUpload/ProductImgUpload/${product.imagePath}`);
+            const imagePath = `imageUpload/ProductImgUpload/${product.imagePath}`
+            console.log("Image Path", imagePath);
+            fs.existsSync(imagePath);
+            // const imagePath = fs.unlinkSync(`imageUpload/ProductImgUpload/${product.imagePath}`);
+
             console.log("Image Path Delete Successfully", imagePath);
         } else {
             console.log("blog Img Not Delete");
