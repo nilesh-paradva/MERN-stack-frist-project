@@ -36,19 +36,6 @@ const CreateProduct = async (req, res) => {
 };
 
 // delete
-// const DeleteProduct = async (req, res) => {
-//     const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id);
-
-//     try {
-//         const imagePath = fs.unlinkSync(`ProductImgUpload/${deletedProduct.imagePath}`);
-//         console.log("Image Path Delete Successfully", imagePath);
-
-//         return res.status(200).json({ success: true, message: "Product Deleted Successfully" });
-//     } catch (err) {
-//         console.log("delete product err", err.message);
-//     }
-// }
-
 const DeleteProduct = async (req, res) => {
     try {
         const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id);
@@ -99,8 +86,13 @@ const UpdateProduct = async (req, res) => {
         if (req.file && product.imagePath) {
             const imagePath = `imageUpload/ProductImgUpload/${product.imagePath}`
             console.log("Image Path", imagePath);
-            fs.existsSync(imagePath);
-            fs.unlinkSync(imagePath);
+            
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+                console.log("Image Path Deleted Successfully");
+            } else {
+                console.log("Image not found at path:", imagePath);
+            }
 
             console.log("Image Path Delete Successfully", imagePath);
         } else {
@@ -115,39 +107,5 @@ const UpdateProduct = async (req, res) => {
         return res.status(500).json({ success: false, message: "Product Not Found" });
     }
 }
-
-
-// const UpdateProduct = async (req, res) => {
-//     const id = req.params.id;
-//     const product = await ProductModel.findById(id);
-
-//     // Check if product and imagePath exist before trying to delete the file
-//     if (product && product.imagePath) {
-//         const imagePath = path.join(__dirname, '..', 'imageUpload', 'ProductImgUpload', product.imagePath);
-//         console.log("update imagePath >>>", imagePath);
-
-//         // Check if the file exists before trying to delete it
-//         if (fs.existsSync(imagePath)) {
-//             try {
-//                 fs.unlinkSync(imagePath);  // Delete the file
-//                 console.log("Old image deleted successfully.");
-//             } catch (err) {
-//                 console.error("Error deleting the image:", err);
-//             }
-//         } else {
-//             console.log("Image file does not exist.");
-//         }
-//     } else {
-//         console.log("No image to delete for this product.");
-//     }
-
-//     try {
-//         // Update the product
-//         const updatedProduct = await ProductModel.findByIdAndUpdate(id, req.file ? { imagePath: req.file.filename || null, ...req.body} : req.body, { new: true });
-//         return res.status(200).json({ success: true, data: updatedProduct });
-//     } catch (err) {
-//         return res.status(500).json({ success: false, message: "Product update failed", error: err.message });
-//     }
-// };
 
 module.exports = { GetProduct, CreateProduct, DeleteProduct, UpdateProduct, GetSingleProduct }
