@@ -40,9 +40,9 @@ const DeleteProduct = async (req, res) => {
     const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id);
 
     try {
-        fs.unlinkSync(`/imageUpload/ProductImgUpload/${deletedProduct.imagePath}`);
-        console.log("Product Deleted Successfully", deletedProduct);
-        
+        const imagePath = fs.unlinkSync(`/ProductImgUpload/${deletedProduct.imagePath}`);
+        console.log("Image Path Delete Successfully", imagePath);
+
         return res.status(200).json({ success: true, message: "Product Deleted Successfully" });
     } catch (err) {
         console.log("delete product err", err.message);
@@ -74,7 +74,7 @@ const UpdateProduct = async (req, res) => {
             const imagePath = fs.unlinkSync(`imageUpload/ProductImgUpload/${product.imagePath}`);
             console.log("Image Path Delete Successfully", imagePath);
         } else {
-            console.log("update Img Not Delete");
+            console.log("blog Img Not Delete");
         }
 
         const updatedProduct = await ProductModel.findByIdAndUpdate(id, req.file ? { imagePath: req.file.filename || null, ...req.body } : req.body);
