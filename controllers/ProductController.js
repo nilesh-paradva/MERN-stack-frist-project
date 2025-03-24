@@ -74,7 +74,7 @@ const UpdateProduct = async (req, res) => {
             const imagePath = fs.unlinkSync(`imageUpload/ProductImgUpload/${product.imagePath}`);
             console.log("Image Path Delete Successfully", imagePath);
         } else {
-            console.log("blog Img Not Delete");
+            console.log("update Img Not Delete");
         }
 
         const updatedProduct = await ProductModel.findByIdAndUpdate(id, req.file ? { imagePath: req.file.filename || null, ...req.body } : req.body);
