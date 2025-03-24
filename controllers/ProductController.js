@@ -57,12 +57,11 @@ const DeleteProduct = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Product not found' });
         }
 
-        // const imagePath = path.join(__dirname, 'ProductImgUpload', deletedProduct.imagePath);
         const imagePath = `imageUpload/ProductImgUpload/${deletedProduct.imagePath}`
         console.log("Image Path", imagePath);
         
-        if (imagePath) {
-            fs.existsSync(imagePath);
+        if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
             console.log("Image Path Deleted Successfully");
         } else {
             console.log("Image not found at path:", imagePath);
@@ -101,7 +100,7 @@ const UpdateProduct = async (req, res) => {
             const imagePath = `imageUpload/ProductImgUpload/${product.imagePath}`
             console.log("Image Path", imagePath);
             fs.existsSync(imagePath);
-            // const imagePath = fs.unlinkSync(`imageUpload/ProductImgUpload/${product.imagePath}`);
+            fs.unlinkSync(imagePath);
 
             console.log("Image Path Delete Successfully", imagePath);
         } else {
