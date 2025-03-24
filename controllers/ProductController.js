@@ -61,7 +61,7 @@ const DeleteProduct = async (req, res) => {
         console.log("Image Path", imagePath);
         
         if (imagePath) {
-            fs.unlinkSync(imagePath);
+            fs.existsSync(imagePath);
             console.log("Image Path Deleted Successfully");
         } else {
             console.log("Image not found at path:", imagePath);
