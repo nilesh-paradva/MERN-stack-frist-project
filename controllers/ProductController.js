@@ -36,18 +36,41 @@ const CreateProduct = async (req, res) => {
 };
 
 // delete
-const DeleteProduct = async (req, res) => {
-    const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id);
+// const DeleteProduct = async (req, res) => {
+//     const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id);
 
-    try {
-        fs.unlinkSync(`mern-stack-frist-project.onrender.com/imageUpload/ProductImgUpload/${deletedProduct.imagePath}`);
-        console.log("Product Deleted Successfully", deletedProduct);
+//     try {
+//         fs.unlinkSync(`mern-stack-frist-project.onrender.com/imageUpload/ProductImgUpload/${deletedProduct.imagePath}`);
+//         console.log("Product Deleted Successfully", deletedProduct);
         
-        return res.status(200).json({ success: true, message: "Product Deleted Successfully" });
+//         return res.status(200).json({ success: true, message: "Product Deleted Successfully" });
+//     } catch (err) {
+//         console.log("delete product err", err.message);
+//     }
+// }
+
+const DeleteProduct = async (req, res) => {
+    try {
+        const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id);
+
+        const imagePath = deletedProduct.imagePath;
+
+        const fullImagePath = path.join(__dirname, 'imageUpload/ProductImgUpload', imagePath);
+        console.log("Product Deleted Path", deletedProduct);
+        
+        if (fs.existsSync(fullImagePath)) {
+            fs.unlinkSync(fullImagePath);
+            console.log("Product Deleted Successfully", deletedProduct);
+            return res.status(200).json({ success: true, message: "Product Deleted Successfully" });
+        } else {
+            console.log("File not found:", fullImagePath);
+            return res.status(404).json({ success: false, message: "Image file not found" });
+        }
     } catch (err) {
         console.log("delete product err", err.message);
+        return res.status(500).json({ success: false, message: "Error deleting product", error: err.message });
     }
-}
+};
 
 // get single
 const GetSingleProduct = async (req, res) => {
