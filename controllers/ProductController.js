@@ -36,18 +36,44 @@ const CreateProduct = async (req, res) => {
 };
 
 // delete
-const DeleteProduct = async (req, res) => {
-    const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id);
+// const DeleteProduct = async (req, res) => {
+//     const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id);
 
+//     try {
+//         const imagePath = fs.unlinkSync(`ProductImgUpload/${deletedProduct.imagePath}`);
+//         console.log("Image Path Delete Successfully", imagePath);
+
+//         return res.status(200).json({ success: true, message: "Product Deleted Successfully" });
+//     } catch (err) {
+//         console.log("delete product err", err.message);
+//     }
+// }
+
+const DeleteProduct = async (req, res) => {
     try {
-        const imagePath = fs.unlinkSync(`ProductImgUpload/${deletedProduct.imagePath}`);
-        console.log("Image Path Delete Successfully", imagePath);
+        const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id);
+
+        if (!deletedProduct) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+
+        const imagePath = path.join(__dirname, 'ProductImgUpload', deletedProduct.imagePath);
+
+        // Check if the image file exists
+        if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+            console.log("Image Path Deleted Successfully");
+        } else {
+            console.log("Image not found at path:", imagePath);
+        }
 
         return res.status(200).json({ success: true, message: "Product Deleted Successfully" });
+
     } catch (err) {
-        console.log("delete product err", err.message);
+        console.log("Delete product error:", err.message);
+        return res.status(500).json({ success: false, message: 'Server error' });
     }
-}
+};
 
 // get single
 const GetSingleProduct = async (req, res) => {
