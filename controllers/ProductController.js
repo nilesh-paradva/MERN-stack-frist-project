@@ -40,7 +40,7 @@ const DeleteProduct = async (req, res) => {
     const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id);
 
     try {
-        fs.unlinkSync(`mern-stack-frist-project.onrender.com/ProductImgUpload/${deletedProduct.imagePath}`);
+        fs.unlinkSync(`mern-stack-frist-project.onrender.com/imageUpload/ProductImgUpload/${deletedProduct.imagePath}`);
         console.log("Product Deleted Successfully", deletedProduct);
         
         return res.status(200).json({ success: true, message: "Product Deleted Successfully" });
