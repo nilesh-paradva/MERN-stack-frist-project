@@ -58,9 +58,9 @@ const DeleteProduct = async (req, res) => {
         }
 
         const imagePath = path.join(__dirname, 'ProductImgUpload', deletedProduct.imagePath);
-
-        // Check if the image file exists
-        if (fs.existsSync(imagePath)) {
+        console.log("Image Path", imagePath);
+        
+        if (imagePath) {
             fs.unlinkSync(imagePath);
             console.log("Image Path Deleted Successfully");
         } else {
