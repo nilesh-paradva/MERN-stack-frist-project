@@ -40,12 +40,18 @@ const DeleteProduct = async (req, res) => {
     const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id);
 
     try {
-        fs.unlinkSync(`imageUpload/ProductImgUpload/${deletedProduct.imagePath}`);
-        console.log("Product Deleted Successfully", deletedProduct);
+        const filePath = `imageUpload/ProductImgUpload/${deletedProduct.imagePath}`;
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            console.log("Product Image Deleted Successfully", deletedProduct);
+        } else {
+            console.log(`File not found: ${filePath}`);
+        }
         
         return res.status(200).json({ success: true, message: "Product Deleted Successfully" });
     } catch (err) {
         console.log("delete product err", err.message);
+        return res.status(500).json({ success: false, message: "Error deleting product" });
     }
 }
 
