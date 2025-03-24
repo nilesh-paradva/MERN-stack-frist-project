@@ -57,7 +57,8 @@ const DeleteProduct = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Product not found' });
         }
 
-        const imagePath = path.join(__dirname, 'ProductImgUpload', deletedProduct.imagePath);
+        // const imagePath = path.join(__dirname, 'ProductImgUpload', deletedProduct.imagePath);
+        const imagePath = `imageUpload/ProductImgUpload/${deletedProduct.imagePath}`
         console.log("Image Path", imagePath);
         
         if (imagePath) {
