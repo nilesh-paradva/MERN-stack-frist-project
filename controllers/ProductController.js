@@ -40,7 +40,7 @@ const DeleteProduct = async (req, res) => {
     const deletedProduct = await ProductModel.findByIdAndDelete(req.params.id);
 
     try {
-        const imagePath = fs.unlinkSync(`/ProductImgUpload/${deletedProduct.imagePath}`);
+        const imagePath = fs.unlinkSync(`ProductImgUpload/${deletedProduct.imagePath}`);
         console.log("Image Path Delete Successfully", imagePath);
 
         return res.status(200).json({ success: true, message: "Product Deleted Successfully" });
